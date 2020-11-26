@@ -19,11 +19,11 @@ test/xxxx/Debug-22/root/app/ApolloDeliveryBookingAvailableWatcher.deps.json
 test/xxxx/Debug-22/root/app/appsettings.LIVE-1.json
 ```
 
+Will explore `https://myregistry.company.com` and store the results in `./explore`
+
 ## Build
 
 ```sh
 $ go get ./...
 $ go build
 ```
-
-Will explore `https://myregistry.company.com` and store the results in `./explore`
