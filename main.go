@@ -19,8 +19,17 @@ var maxLayers = 2
 func main() {
 	//log.SetOutput(ioutil.Discard)
 	// creating target folder, denying if existing
+	imageFilter := ""
+	tagFilter := ""
 	if len(os.Args) < 3 {
 		log.Fatal("2 arguments required, repo and target directory")
+	}
+	if len(os.Args) == 4 {
+		imageFilter = os.Args[3]
+	}
+
+	if len(os.Args) == 5 {
+		tagFilter = os.Args[4]
 	}
 	destDir := path.Clean(os.Args[2])
 	destDirExists, err := file.Exists(destDir)
@@ -41,11 +50,21 @@ func main() {
 		panic(err)
 	}
 	for _, repo := range repos {
+		if len(imageFilter) > 0 {
+			if repo != imageFilter {
+				continue
+			}
+		}
 		tags, err := hub.Tags(repo)
 		if err != nil {
 			panic(err)
 		}
 		for _, tag := range tags {
+			if len(tagFilter) > 0 {
+				if tag != tagFilter {
+					continue
+				}
+			}
 			fmt.Printf("Found %s:%s :\n", repo, tag)
 			imageStoreDir := path.Join(destDir, repo, tag)
 			err = os.MkdirAll(imageStoreDir, 0700)

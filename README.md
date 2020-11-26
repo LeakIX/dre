@@ -11,7 +11,7 @@ It also stores the image config in config.json for further analysis.
 ## Usage
 
 ```sh
-$ ./dre "https://myregistry.company.com" ./explore
+$ ./dre "https://myregistry.company.com" ./explore [image-name] [tag-name]
 $ find ./explore|grep json
 test/xxxx/Debug-22/root/app/appsettings.SIT-2.json
 test/xxxx/Debug-22/root/app/appsettings.json
