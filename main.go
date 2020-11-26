@@ -106,7 +106,6 @@ func main() {
 					}
 					files = append(files, header.Name)
 					target := filepath.Join(imageRootStoreDir, header.Name)
-					log.Println(target)
 					switch header.Typeflag {
 
 					// if its a dir and it doesn't exist create it
