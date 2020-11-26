@@ -24,11 +24,11 @@ func main() {
 	if len(os.Args) < 3 {
 		log.Fatal("2 arguments required, repo and target directory")
 	}
-	if len(os.Args) == 4 {
+	if len(os.Args) > 3 {
 		imageFilter = os.Args[3]
 	}
 
-	if len(os.Args) == 5 {
+	if len(os.Args) > 4 {
 		tagFilter = os.Args[4]
 	}
 	destDir := path.Clean(os.Args[2])
@@ -119,6 +119,14 @@ func main() {
 					// if it's a file create it
 					case tar.TypeReg:
 						log.Printf("Downloading %s...", header.Name)
+						// Fallback logic in case the directory was created in an upper layer
+						baseDir := path.Dir(header.Name)
+						baseDirExists, err := file.Exists(baseDir)
+						if err != nil || !baseDirExists {
+							if err := os.MkdirAll(baseDir, 0755); err != nil {
+								panic(err)
+							}
+						}
 						f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, os.FileMode(header.Mode))
 						if err != nil {
 							panic(err)
