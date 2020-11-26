@@ -5,8 +5,7 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
-	"github.com/kycheng/docker-registry-client/registry"
-	"github.com/micro/go-micro/util/file"
+	"github.com/LeakIX/docker-registry-client/registry"
 	"io"
 	"log"
 	"os"
@@ -32,15 +31,15 @@ func main() {
 		tagFilter = os.Args[4]
 	}
 	destDir := path.Clean(os.Args[2])
-	destDirExists, err := file.Exists(destDir)
-	if err != nil || destDirExists {
-		log.Fatal("Destination incorrect/already exists", err)
+	if FileExists(destDir) {
+		log.Fatal("Destination incorrect/already exists")
 	}
-	err = os.MkdirAll(destDir, 0700)
+	err := os.MkdirAll(destDir, 0700)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Created " + destDir)
+
 	hub, err := registry.NewInsecure(os.Args[1], "", "", log.Flags())
 	if err != nil {
 		panic(err)
@@ -121,8 +120,7 @@ func main() {
 						log.Printf("Downloading %s...", header.Name)
 						// Fallback logic in case the directory was created in an upper layer
 						baseDir := path.Dir(header.Name)
-						baseDirExists, err := file.Exists(baseDir)
-						if err != nil || !baseDirExists {
+						if !FileExists(baseDir) {
 							if err := os.MkdirAll(baseDir, 0755); err != nil {
 								panic(err)
 							}
@@ -179,4 +177,12 @@ type DockerConfig struct {
 	Config struct {
 		Env []string `json:"Env"`
 	} `json:"config"`
+}
+
+func FileExists(filepath string) bool {
+	fileinfo, err := os.Stat(filepath)
+	if os.IsNotExist(err) || fileinfo == nil {
+		return false
+	}
+	return true
 }
