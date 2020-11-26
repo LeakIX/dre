@@ -2,6 +2,12 @@
 
 Docker Registry Exploration
 
+## Concept
+
+It connects to docker registries to queries all availables repos and tags.
+The tool then proceeds to download each files of **the last 2 layers** for each tags.
+It also stores the image config in config.json for further analysis.
+
 ## Usage
 
 ```sh
