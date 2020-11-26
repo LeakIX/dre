@@ -106,6 +106,7 @@ func main() {
 					}
 					files = append(files, header.Name)
 					target := filepath.Join(imageRootStoreDir, header.Name)
+					log.Println(target)
 					switch header.Typeflag {
 
 					// if its a dir and it doesn't exist create it
@@ -117,9 +118,9 @@ func main() {
 						}
 					// if it's a file create it
 					case tar.TypeReg:
-						log.Printf("Downloading %s...", header.Name)
+						log.Printf("Downloading %s to %s...", header.Name, target)
 						// Fallback logic in case the directory was created in an upper layer
-						baseDir := path.Dir(header.Name)
+						baseDir := path.Dir(target)
 						if !FileExists(baseDir) {
 							if err := os.MkdirAll(baseDir, 0755); err != nil {
 								panic(err)
